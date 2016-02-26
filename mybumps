@@ -1,0 +1,38 @@
+#!/usr/bin/env node
+
+var PATH = require('path'),
+    mybumps = require('./index');
+
+function ext(yargs) {
+  return yargs
+    .string('workdir')
+    .default('workdir', process.env.WORKDIR || process.cwd())
+    .describe('workdir', 'Specifies the working directory paths are relative to');
+}
+
+var yargs = require('yargs')
+  .command('get', 'Get the current version', function (yargs) {
+    return ext(yargs)
+      .demand(2)
+      .usage('$0 get <file>')
+      .example('$0 get package.json');
+  })
+  .command('put', 'Put the specified version to the listed file(s)', function (yargs) {
+    return ext(yargs)
+      .demand(2)
+      .string('from')
+      .demand('from')
+      .string('to')
+      .demand('to')
+      .usage('$0 put --from <version> --to <version> <file> [...file]')
+      .example('$0 put 1.0.0 package.json');
+  })
+  .demand(1);
+
+var argv = yargs.argv,
+    args = argv._.slice();
+    command = args.shift();
+
+var out = mybumps(argv.workdir)[command](args, argv);
+
+console.log(out);

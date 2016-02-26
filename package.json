@@ -1,0 +1,20 @@
+{
+  "name": "@myndzi/mybumps",
+  "version": "1.0.0",
+  "description": "Tool to get and put versions to multiple projects/file types",
+  "main": "index.js",
+  "author": "Kris Reeves",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/myndzi/mybumps"
+  },
+  "bin": {
+    "mybumps": "mybumps"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "cheerio": "^0.20.0",
+    "semver": "^5.1.0",
+    "yargs": "^4.1.0"
+  }
+}
