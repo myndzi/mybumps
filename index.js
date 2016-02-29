@@ -67,9 +67,9 @@ module.exports = function (workDir) {
     var fromVer = argv.from,
         toVer = argv.to;
     
-    if (!semver.gt(toVer, fromVer)) {
+    if (!semver.gte(toVer, fromVer)) {
       console.error(
-        'Error: target version must be greater than source version (%s <= %s)',
+        'Error: target version must be greater than or equal to source version (%s < %s)',
         toVer, fromVer
       );
       process.exit(1);
