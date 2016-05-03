@@ -20,18 +20,18 @@ module.exports = function (workDir) {
     var exts = Object.keys(TYPES).join('|'),
         matches = path.match(new RegExp('\\.('+exts+')$', 'i')),
         shortName = PATH.relative(workDir, path);
-    
+
     if (!matches) {
       throw new Error('Unknown file type: ' + shortName);
     }
-    
+
     var ext = matches[1].toLowerCase(),
         types = TYPES[ext],
         data;
-    
+
     for (var i = 0; i < types.length; i++) {
       data = types[i](content);
-      
+
       if (data.get()) {
         return {
           data: data,
@@ -41,7 +41,7 @@ module.exports = function (workDir) {
         };
       }
     }
-    
+
     throw new Error('Unable to determine type of file: ' + shortName);
   }
 
@@ -55,28 +55,28 @@ module.exports = function (workDir) {
 
   function get(files) {
     var loaded = loadAll(files);
-    
+
     loaded.forEach(function (file) {
       console.error(file.shortName, file.data.get());
     });
-    
+
     return loaded[0].data.get();
   }
-  
+
   function put(files, argv) {
     var fromVer = argv.from,
         toVer = argv.to;
-    
-    if (!semver.gte(toVer, fromVer)) {
+
+    if (!semver.gte(semver.inc(toVer, 'patch'), semver.inc(fromVer, 'patch'))) {
       console.error(
         'Error: target version must be greater than or equal to source version (%s < %s)',
         toVer, fromVer
       );
       process.exit(1);
     }
-    
+
     var loaded = loadAll(files);
-    
+
     loaded.forEach(function (file) {
       var fileVer = file.data.get();
       if (!fileVer || !semver.valid(fileVer)) {
@@ -94,13 +94,13 @@ module.exports = function (workDir) {
         process.exit(3);
       }
     });
-    
+
     loaded.forEach(function (file) {
       file.data.put(toVer);
       console.error(file.shortName, toVer);
       fs.writeFileSync(file.path, file.data.stringify());
     });
-    
+
     return toVer;
   }
 
